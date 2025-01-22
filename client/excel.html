@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Upload Excel</title>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <br><br><br>
+
+    <img style="width: 150px; margin: auto; display: block;" src="./images/400dpiLogoCropped.jpg">
+
+    <br><br><br>
+
+    <h1 class="text-center">Best Care Assosicates.</h1>
+
+    <br><br><br> 
+
+    <div class="d-flex m-5">
+        
+            <input
+            type="text"
+            id="searchBar"
+            placeholder="Search for a Name..."
+            style="padding: 5px; font-size: 16px;"
+            class="w-100 m-5"
+            >
+        
+        <button id="save" class="btn btn-primary p-3 m-5">Save Roster Updated File</button>
+
+        <div class="m-5"><label class="text-center">Date of Report: </label> <input type="date" id="datePicker"/></div>
+    </div>
+
+    <div class="d-flex justify-content-around">
+        <i><h1>Billed File:</h1></i>
+
+        <i><h1>Roster File:</h1></i>
+    </div>
+
+
+    <div class="m-5" style="display: inline-block; width: 45%; vertical-align: top;  max-height: 85vh; overflow-y: auto; border: 1px solid #020202; ">
+       
+        <input type="file" id="upload"/>
+
+        <table id="excelData" style="width: 100%;"></table>
+
+    </div>
+
+    
+    <div class="m-5" style="display: inline-block; width: 40%; vertical-align: top; vertical-align: top;  max-height: 85vh; overflow-y: auto; border: 1px solid #020202;">
+        
+        <input type="file" id="upload2"/>
+        <table id="excelData2" style="width: 100%;"></table>
+        </div>
+
+    </div>
+
+
+
+
+    </div>
+    
+</body>
+</html>
