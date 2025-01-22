@@ -100,7 +100,7 @@ app.post('/newpatient', async(req, res) => {
   try {
     const {data , error} = await supabase
     .from('patients')
-    .insert([{name , dateOfService}])
+    .insert([{name , date_of_service}])
 
   if (error){
     throw error
