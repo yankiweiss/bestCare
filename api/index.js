@@ -12,6 +12,26 @@ app.use(express.json());
 
 app.use(express.static('public'));
 
+app.get('/users', async (req, res) => {
+  try {
+    // Fetch users from the 'users' table
+    const { data, error } = await supabase
+      .from('patients')
+      .select('*');
+
+    if (error) {
+      throw error; // Handle any Supabase errors
+    }
+
+    // Respond with the user data
+    res.status(200).json(data);
+  } catch (err) {
+    // Handle server errors
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 app.post('/newpatient', async(req, res) => {
   const {name , email} = req.body 
 
