@@ -5,7 +5,7 @@ const path = require('path')
 const PORT = process.env.PORT || 3501;
 const cors = require('cors');
 const mongoose = require('mongoose')
-const connectDB = require('./config/dbConn')
+const connectDB = require('../config/dbConn')
 
 
 connectDB()
