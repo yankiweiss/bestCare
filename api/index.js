@@ -91,9 +91,9 @@ app.get('/users', async (req, res) => {
 
 app.post('/newpatient', async(req, res) => {
   console.log(req.body)
-  const {name , date_of_service} = req.body 
+  const {name , dateOfService} = req.body 
 
-  if(!name || !date_of_service) {
+  if(!name || !dateOfService) {
     return res.status(400).json({error: 'Name and Date of Service are required.'})
   }
 
