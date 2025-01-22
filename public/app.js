@@ -6,7 +6,7 @@ document.getElementById('uploadExcelFile').addEventListener('submit', async (e) 
     formData.append('file', document.getElementById('excelFile').files[0]);
 
     try {
-       const response = await fetch('https://best-care.vercel.app/upload', {
+       const response = await fetch('./upload', {
         method: 'POST',
         body: formData
        }) 
