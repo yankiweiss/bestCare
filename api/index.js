@@ -1,10 +1,9 @@
-require("dotenv").config();
 const express = require("express");
 const app = express();
 const path = require("path");
 const PORT = process.env.PORT || 3501;
 const cors = require("cors");
-const mongoose = require("mongoose");
+
 
 
 
@@ -21,8 +20,6 @@ app.get("/excel.html", (req, res) => {
 
 app.listen(PORT, () => console.log(`Server runing on port ${PORT}`));
 
-mongoose.connection.once("open", () => {
-  console.log("Connceted to MongoDB");
-});
+
 
 module.exports = app;
