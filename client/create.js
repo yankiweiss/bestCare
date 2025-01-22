@@ -5,7 +5,7 @@ document.getElementById('userForm').addEventListener('submit', async function (e
     const email = document.getElementById('email').value;
   
     try {
-      const response = await fetch('https://bpatientest-care.vercel.app/new', { // Replace with your backend URL
+      const response = await fetch('https://best-care.vercel.app/newpatient', { // Replace with your backend URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
