@@ -9,8 +9,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
         return
     }
 
-    const formData = new FormData();
-    formData.append('file', file)
+    
 
     let jsonData;
 
@@ -19,7 +18,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
     try {
        if(file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
         jsonData = await processExcelFile(file)
-       }else if (file.name.endsWith('csv')){
+       }else if (file.name.endsWith('.csv')){
         jsonData = await processCSVFile(file)
        }else {
         alert('Invalid file type. Please upload an Excel or CSV file.');
@@ -64,50 +63,36 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
         });
     }
 
-       async function processCSVFile(file) {
-        return new Promise((resolve, reject) =>{
+    async function processCSVFile(file) {
+        return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            const chunkSize = 1024 *1024;
-            let currentPosistion = 0;
-            let headers = null;
-            let jsonData = [];
-
             reader.onload = function(event) {
                 const data = event.target.result;
-                const text = data.toString();
-                const lines = text.split('\n');
+                const json = CSVToJSON(data);
+                resolve(json);
+            };
+            reader.onerror = function(error) {
+                reject(error);
+            };
+            reader.readAsText(file);
+        });
+    }
 
-                lines.forEach((line , index)=>{
-                    if(index === 0 && !headers){
-                        headers = line.split(',')
-                    }else {
-                        const values = line.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g); 
-                        if(values){
-                            const obj = {};
-                            headers.forEach((header, i )=> {
-                                obj[header.trim()] = values[i] ? values[i].replace(/"/g, '').trim() : '';
-                            });
-
-                            jsonData.push(obj)
-                        }
-                    }
-                });
-
-                currentPosistion += chunkSize;
-                if(currentPosistion < file.size){
-                    readNextChunk()
-                }else {
-                    resolve(jsonData)
-                }
-
-                function readNextChunk(){
-                    const slice = file.slice(currentPosistion, currentPosistion + chunkSize);
-                    reader.readAsText(slice)
-                }
-
-                readNextChunk();
-            }
-        })
-       }
-    })
+    function CSVToJSON(csv) {
+        const rows = csv.split('\n');
+        const headers = rows[0].split(',');
+    
+        const json = rows.slice(1).map(row => {
+            const values = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g); // Match values properly even with commas inside quotes
+            const obj = {};
+            headers.forEach((header, index) => {
+                obj[header.trim()] = values[index].replace(/"/g, '').trim(); // Remove quotes and any extra spaces
+            });
+            return obj;
+        });
+    
+        return json;
+    }
+    
+})
     
