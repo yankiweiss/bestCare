@@ -13,6 +13,16 @@ const { enableCompileCache } = require("module");
 
 app.use(express.json());
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Specify the directory to store files
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`); // Unique filename
+  },
+});
+
+const upload = multer({ storage });
 
 
 app.post('/upload', upload.single('file'), async (req, res) => {
