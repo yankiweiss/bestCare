@@ -34,6 +34,9 @@ res.status(500).json({error: error.message});
 }
 })
 
+app.get("/create", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "client", "create.html"));
+});
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "client", "index.html"));
