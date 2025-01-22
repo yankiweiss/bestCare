@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/excel.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "./client/excel.html"));
+  res.sendFile(path.join(__dirname, "..", "client", "excel.html"));
 });
 
 app.listen(PORT, () => console.log(`Server runing on port ${PORT}`));
