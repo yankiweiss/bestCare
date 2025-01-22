@@ -14,12 +14,17 @@ document.getElementById('userForm').addEventListener('submit', async function (e
       });
   
       const data = await response.json();
+
+      if(!dateOfService){
+        document.getElementById('responseMessage').innerText = 'Please select a date.';
+        return
+      }
   
       if (response.ok) {
         document.getElementById('responseMessage').innerText = `Success: ${data.message}`;
       } else {
         document.getElementById('responseMessage').innerText = `Error: ${data.error}`;
-      }
+      } 
     } catch (error) {
       console.log(error)
       document.getElementById('responseMessage').innerText = `Error: ${error.message}`;
