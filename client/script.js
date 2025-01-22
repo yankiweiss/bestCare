@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
     try {
-      const response = await fetch('https://bpatientest-care.vercel.app/users'); // Replace with your backend URL
+      const response = await fetch('https://best-care.vercel.app/users'); // Replace with your backend URL
       const users = await response.json();
   
       if (!response.ok) {

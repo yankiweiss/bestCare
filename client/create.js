@@ -21,6 +21,7 @@ document.getElementById('userForm').addEventListener('submit', async function (e
         document.getElementById('responseMessage').innerText = `Error: ${data.error}`;
       }
     } catch (error) {
+      console.log(error)
       document.getElementById('responseMessage').innerText = `Error: ${error.message}`;
     }
   });
