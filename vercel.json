@@ -1,24 +1,4 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "index.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/index.js"
-      },
-      {
-        "src": "/excel.html",
-        "dest": "/client/excel.html"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/client/index.html"
-      }
-    ]
-  }
-  
+    "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
+}

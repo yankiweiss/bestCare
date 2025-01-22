@@ -26,14 +26,19 @@ app.get('/excel.html', (req, res)=> {
     res.sendFile(path.join(__dirname, './client/excel.html'));
 })
 
+
+app.listen(PORT, () => console.log(`Server runing on port ${PORT}`))
+
 mongoose.connection.once('open', () => {
     console.log('Connceted to MongoDB');
-    app.listen(PORT, () => console.log(`Server runing on port ${PORT}`))
+    
 })
 
 const serverless = require('serverless-http');
 const app = require('./index'); // Import your Express app
 
 module.exports = serverless(app);
+
+
 
 
