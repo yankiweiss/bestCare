@@ -3,6 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Upload</title>
+</head>
+<body>
+    <h1>Upload CSV</h1>
+    <form id="csvForm" enctype="multipart/form-data">
+        <input type="file" name="csvFile" id="csvFile" accept=".csv" required />
+        <button type="submit">Upload CSV</button>
+    </form>
+
+    <script>
+        document.getElementById('csvForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
+            formData.append('csvFile', file);
+
+            // Send the form data to the backend using Fetch API
+            fetch('https://best-care.vercel.app/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('File uploaded and processed!');
+            })
+            .catch(error => {
+                console.error('Error uploading file:', error);
+                alert('An error occurred.');
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Upload Excel</title>
@@ -48,4 +91,4 @@
 
    <a href="./index.html"> Dashboard</a>
 </body>
-</html>
+</html>-->

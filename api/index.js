@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require('fs');
 const multer = require('multer');
+const csv = require('csv-parser');
 const xlsx = require('xlsx')
 const app = express();
 const path = require("path");
@@ -17,38 +18,66 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 
-app.post('/upload', async(req, res)=> {
-  const data = req.body;
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads')
+  },
 
-  console.log(data)
-
-  if(!data || data.length === 0){
-    return res.status(400).send('No data received.');
+  filename : (req, file , cb) => {
+    cb(null, file.originalname)
   }
+});
+
+const upload = multer({storage: storage})
+
+app.post('/upload', upload.single('csvFile'), (req, res) =>{
+  if(!req.file){
+    return res.status(400).send('No file uploaded')
+  }
+
+  const filePath = path.join(__dirname, 'uploads', req.file.filename );
+  const jsonData = []
+
+  fs.createReadStream(filePath)
+  pipeline(csv())
+  .on('data', (row) => {
+    jsonData.push(row)
+  })
+  .on('end', ()=> {
+    saveToDatabase(jsonData)
+    .then(() =>{
+      res.status(200).send('File uploaded and data saved to database.');
+    })
+    .catch((err) => {
+      res.status(500).send('Error saving to database.');
+  });
+  })
+})
+
+async function saveToDatabase(data) {
+  console.log('Data to save:', data);
+
+  const records = data.map((row)=> ({
+    name: row.name,
+    date_of_service: row.date_of_service
+  }))
 
   try {
-    const insertPromises = data.map(async (row) =>{
-      const {name , date_of_service} = row;
-      if(name && date_of_service) {
-        const {error } = await supabase
-        .from('patients')
-        .insert([{name , date_of_service}]);
+    const { error } = await supabase
+    .from('patients')
+    .insert(records)
 
-        if (error){
-          console.error('Error inserting data:' ,error)
-        }
-      }
-    });
+    if(error){
+      throw error
+    }
 
-    await Promise.all(insertPromises);
-
-    res.send('File processed and data saved to the database.')
-    console.log('Data Suscsesfuly Saved in Database')
+    console.log('Data saved to databse')
   } catch (error) {
-    console.error('Error processing data:', error);
-        res.status(500).send('Error processing data.');
+    console.error('Error saving in database', error)
+    throw error
   }
-})
+}
+   
 
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders: (res, filePath) => {
