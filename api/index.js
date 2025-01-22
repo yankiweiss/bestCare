@@ -3,7 +3,7 @@ const app = express();
 const path = require("path");
 const PORT = process.env.PORT || 3501;
 const cors = require("cors");
-const supabase = require('./supabase');
+const supabase = require('../supabase.js');
 const { error } = require("console");
 
 
