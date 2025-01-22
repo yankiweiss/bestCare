@@ -12,36 +12,25 @@ const { enableCompileCache } = require("module");
 
 app.use(express.json());
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './uploads');
-  },
-  filename : (req, file, cb) =>{
-    cb(null, Date.now() + path.extname(file.originalname))
-  }
-});
 
-const upload = multer({storage: storage})
 
 app.post('/upload', upload.single('file'), async (req, res) => {
   if(!req.file){
     return res.status(400).send('No File Uplaoded')
   }
 
-  const filePath = req.file.path;
-
   try{
 
 const workbook = xlsx.readFile(filePath);
 const sheet_name_list = workbook.SheetNames;
-const xlData = xlsx.utils.sheet_add_json(workbook.Sheets[Sheets_name_list[0]]);
+const xlData = xlsx.utils.sheet_add_json(workbook.Sheets[sheet_name_list[0]]);
 
 const insertPromise = xlData.map(async (row) => {
   const {name, date_of_service} = row;
   if (name && date_of_service){
     const {data, error} = await supabase
     .from('patients')
-    .insert({name, date_of_service});
+    .insert([{name, date_of_service}]);
     if(error){
       console.error('Error inserting in Database')
     }else {
