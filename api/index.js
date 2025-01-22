@@ -37,7 +37,7 @@ res.status(500).json({error: error.message});
 
 
 
-app.get("/create", (req, res) => {
+app.get("/create.html", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "client", "create.html"));
 });
 
