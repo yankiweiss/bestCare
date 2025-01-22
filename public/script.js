@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     const tableHeader = document.createElement('thead');
     tableHeader.innerHTML = `
       <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Name</th>
-        <th scope="col">Email</th>
+        <th scope="col">ID:</th>
+        <th scope="col">Name:</th>
+        <th scope="col">Date Of Service:</th>
        
       </tr>
     `;
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       row.innerHTML = `
         <td>${user.id}</td>
         <td>${user.name}</td>
-        <td>${user.email}</td>
+        <td>${user.date_of_service}</td>
        
       `;
       tableBody.appendChild(row);

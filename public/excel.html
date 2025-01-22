@@ -16,55 +16,34 @@
 
     <br><br><br>
 
-    <h1 class="text-center">Best Care Assosicates.</h1>
+    <h1 class="text-center">Best Care Associates.</h1>
 
     <br><br><br> 
+    <div>
+    <label for="typeOfFile">Please Select File Type:</label>
+    </div>
+    <select name="typeOfFile" id="fileType">
+        <option value="billingFile">Billing File</option>
+        <option value="rosterFile">Roster  File</option>
+    </select>
 
-    <!--<div class="d-flex m-5">
-        
-            <input
-            type="text"
-            id="searchBar"
-            placeholder="Search for a Name..."
-            style="padding: 5px; font-size: 16px;"
-            class="w-100 m-5"
-            >
-        
-        <button id="save" class="btn btn-primary p-3 m-5">Save Roster Updated File</button>
-
-    -->
+    
 
         <div class="m-5"><label class="text-center">Date of Report: </label> <input type="date" id="datePicker"/></div>
     </div>
 
-    <div class="d-flex justify-content-around">
-        <i><h1>Billed File:</h1></i>
+    <div>
+        <form id="uploadExcelFile" enctype="multipart/form-data">
+            <input type="file" id="excelFile" name="file" accept=".xlsx,.xlx,.csv" required>
+            <button type="submit">Upload</button>
 
-        <i><h1>Roster File:</h1></i>
+
+        </form>
     </div>
+   
 
-
-    <div class="m-5" style="display: inline-block; width: 45%; vertical-align: top;  max-height: 85vh; overflow-y: auto; border: 1px solid #020202; ">
-       
-        <input type="file" id="upload"/>
-
-        <table id="excelData" style="width: 100%;"></table>
-
-    </div>
 
     
-    <div class="m-5" style="display: inline-block; width: 40%; vertical-align: top; vertical-align: top;  max-height: 85vh; overflow-y: auto; border: 1px solid #020202;">
-        
-        <input type="file" id="upload2"/>
-        <table id="excelData2" style="width: 100%;"></table>
-        </div>
-
-    </div>
-
-
-
-
-    </div>
-    
+   <script src="app.js"></script> 
 </body>
 </html>
