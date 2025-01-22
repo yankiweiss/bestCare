@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         <th scope="col">ID</th>
         <th scope="col">Name</th>
         <th scope="col">Email</th>
-        <th scope="col">Date Created</th>
+       
       </tr>
     `;
     table.appendChild(tableHeader);
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         <td>${user.id}</td>
         <td>${user.name}</td>
         <td>${user.email}</td>
-        <td>${new Date(user.created_at).toLocaleString()}</td>
+       
       `;
       tableBody.appendChild(row);
     });
