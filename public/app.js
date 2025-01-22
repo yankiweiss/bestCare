@@ -14,6 +14,8 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
 
     let jsonData;
 
+
+
     try {
        if(file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
         jsonData = await processExcelFile(file)
@@ -23,6 +25,8 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
         alert('Invalid file type. Please upload an Excel or CSV file.');
             return;
        }
+
+       console.log(jsonData)
 
        const response = await fetch('https://best-care.vercel.app/upload', {
         method: 'POST',
@@ -80,15 +84,16 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
             const headers = rows[0].split(',');
         
             const json = rows.slice(1).map(row => {
-                const values = row.split(',');
+                const values = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g); // Match values properly even with commas inside quotes
                 const obj = {};
                 headers.forEach((header, index) => {
-                    obj[header.trim()] = values[index].trim();
+                    obj[header.trim()] = values[index].replace(/"/g, '').trim(); // Remove quotes and any extra spaces
                 });
                 return obj;
             });
         
             return json;
         }
+        
     })
     

@@ -20,6 +20,8 @@ app.use(bodyParser.json());
 app.post('/upload', async(req, res)=> {
   const data = req.body;
 
+  console.log(data)
+
   if(!data || data.length === 0){
     return res.status(400).send('No data received.');
   }
@@ -41,6 +43,7 @@ app.post('/upload', async(req, res)=> {
     await Promise.all(insertPromises);
 
     res.send('File processed and data saved to the database.')
+    console.log('Data Suscsesfuly Saved in Database')
   } catch (error) {
     console.error('Error processing data:', error);
         res.status(500).send('Error processing data.');
