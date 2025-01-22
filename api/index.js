@@ -9,62 +9,43 @@ const cors = require("cors");
 const supabase = require('../supabase.js');
 const { error } = require("console");
 const { enableCompileCache } = require("module");
+const bodyParser = require('body-parser');
+
 
 app.use(cors());
 app.use(express.json());
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Specify the directory to store files
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`); // Unique filename
-  },
-});
-
-const upload = multer({ storage });
+app.use(bodyParser.json());
 
 
-app.post('/upload', upload.single('file'), async (req, res) => {
-  console.log('Request URL:', req.originalUrl);
-  if(!req.file){
-    return res.status(400).send('No File Uplaoded')
+app.post('/upload', async(req, res)=> {
+  const data = req.body;
+
+  if(!data || data.length === 0){
+    return res.status(400).send('No data received.');
   }
 
-  try{
-  const filePath = req.file.path;
-const workbook = xlsx.readFile(filePath);
-const sheet_name_list = workbook.SheetNames;
-const xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-
-const insertPromises = xlData.map(async (row) =>{
   try {
-    const {name, date_of_service} = row;
-    if(name && date_of_service){
-      const {data, error} = await supabase
-      .from('patients')
-      .insert([{name, date_of_service}]);
-      if(error){
-        throw new Error('Error inserting into Database');
+    const insertPromises = data.map(async (row) =>{
+      const {name , date_of_service} = row;
+      if(name && date_of_service) {
+        const {error } = await supabase
+        .from('patients')
+        .insert([{name , date_of_service}]);
+
+        if (error){
+          console.error('Error inserting data:' ,error)
+        }
       }
-      console.log('Data inserted', data);
-    }
+    });
+
+    await Promise.all(insertPromises);
+
+    res.send('File processed and data saved to the database.')
   } catch (error) {
-    console.error('Insertion faield for row:', row, err.message)
+    console.error('Error processing data:', error);
+        res.status(500).send('Error processing data.');
   }
 })
-
-await Promise.all(insertPromises);
-
-
-res.send('File upaloeded, stored, and data is Saved to Supabase');
-}catch(error){
-  console.error('Error processing file:', error);
-  res.status(500).send('Error Proccesing File')
-}
-})
-
-
 
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders: (res, filePath) => {
