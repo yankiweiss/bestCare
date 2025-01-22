@@ -5,11 +5,11 @@ const path = require("path");
 const PORT = process.env.PORT || 3501;
 const cors = require("cors");
 const mongoose = require("mongoose");
-const connectDB = require("../config/dbconn.js");
 
-connectDB();
 
-app.use("/register", require("../controllers/registerController"));
+
+
+
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "client", "index.html"));

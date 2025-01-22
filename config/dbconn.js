@@ -1,21 +1,18 @@
 
-const mongoose = require('mongoose');
+const {MongoClient } = require('mongodb')
 
-const connectDB = async () => {
-    if (!process.env.DATABASE_URI) {
-        console.error('MongoDB URI is not defined in the environment variables');
-        return;
-    }
+const uri = 'mongodb+srv://yakovw2706:alMRlNtXPbJYGwVk@cluster0.xccai.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+const client = new MongoClient(uri)
 
+async function connectDB() {
     try {
-        await mongoose.connect(process.env.DATABASE_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
+        await client.connect();
         console.log('MongoDB connected successfully');
-    } catch (error) {
-        console.error('MongoDB connection failed:', error);
+    } catch (err) {
+        console.error('MongoDB connection failed:', err);
     }
 }
+
+connectDB();
 
 module.exports = connectDB;
