@@ -20,10 +20,10 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   }
 
   try{
-
+  const filePath = req.file.path;
 const workbook = xlsx.readFile(filePath);
 const sheet_name_list = workbook.SheetNames;
-const xlData = xlsx.utils.sheet_add_json(workbook.Sheets[sheet_name_list[0]]);
+const xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
 const insertPromise = xlData.map(async (row) => {
   const {name, date_of_service} = row;
