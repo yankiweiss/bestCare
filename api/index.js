@@ -41,7 +41,7 @@ const insertPromise = xlData.map(async (row) => {
 
 await Promise.all(insertPromise);
 
-fstat.unlikSync(filePath);
+
 res.send('File upaloeded, stored, and data is Saved to Supabase');
 }catch(error){
   console.error('Error processing file:', error);
