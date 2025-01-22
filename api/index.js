@@ -1,4 +1,5 @@
 const express = require("express");
+const fs = require('fs');
 const multer = require('multer');
 const xlsx = require('xlsx')
 const app = express();
@@ -14,7 +15,7 @@ app.use(express.json());
 
 
 
-/*app.post('/upload', upload.single('file'), async (req, res) => {
+app.post('/upload', upload.single('file'), async (req, res) => {
   if(!req.file){
     return res.status(400).send('No File Uplaoded')
   }
@@ -25,21 +26,24 @@ const workbook = xlsx.readFile(filePath);
 const sheet_name_list = workbook.SheetNames;
 const xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
-const insertPromise = xlData.map(async (row) => {
-  const {name, date_of_service} = row;
-  if (name && date_of_service){
-    const {data, error} = await supabase
-    .from('patients')
-    .insert([{name, date_of_service}]);
-    if(error){
-      console.error('Error inserting in Database')
-    }else {
-      console.log('Data inserted:', data)
+const insertPromises = xlData.map(async (row) =>{
+  try {
+    const {name, date_of_service} = row;
+    if(name && date_of_service){
+      const {data, error} = await supabase
+      .from('patients')
+      .insert([{name, date_of_service}]);
+      if(error){
+        throw new Error('Error inserting into Database');
+      }
+      console.log('Data inserted', data);
     }
+  } catch (error) {
+    console.error('Insertion faield for row:', row, err.message)
   }
-});
+})
 
-await Promise.all(insertPromise);
+await Promise.all(insertPromises);
 
 
 res.send('File upaloeded, stored, and data is Saved to Supabase');
@@ -48,7 +52,7 @@ res.send('File upaloeded, stored, and data is Saved to Supabase');
   res.status(500).send('Error Proccesing File')
 }
 })
-*/
+
 
 
 app.use(express.static(path.join(__dirname, 'public'), {
