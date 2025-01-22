@@ -2,14 +2,14 @@
     "version": 2,
     "builds": [
       {
-        "src": "api/index.js",
+        "src": "index.js",
         "use": "@vercel/node"
       }
     ],
     "routes": [
       {
-        "src": "/register/(.*)",
-        "dest": "/api/handler.js"
+        "src": "/(.*)",
+        "dest": "/index.js"
       },
       {
         "src": "/excel.html",
