@@ -31,3 +31,9 @@ mongoose.connection.once('open', () => {
     app.listen(PORT, () => console.log(`Server runing on port ${PORT}`))
 })
 
+const serverless = require('serverless-http');
+const app = require('./index'); // Import your Express app
+
+module.exports = serverless(app);
+
+
