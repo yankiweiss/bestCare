@@ -5,15 +5,14 @@ document.getElementById('uploadExcelFile').addEventListener('submit', async (e) 
 
     formData.append('file', document.getElementById('excelFile').files[0]);
 
+
     try {
        const response = await fetch('https://best-care.vercel.app/upload', {
         method: 'POST',
         body: formData
        }) 
 
-       if (!req.file) {
-        return res.status(400).send('No file uploaded.');
-      }
+      
       
 
        if (response.ok){
