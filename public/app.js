@@ -11,6 +11,11 @@ document.getElementById('uploadExcelFile').addEventListener('submit', async (e) 
         body: formData
        }) 
 
+       if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+      }
+      
+
        if (response.ok){
         alert('File was uploaded succsefuly');
        }else {
