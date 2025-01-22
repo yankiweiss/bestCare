@@ -14,7 +14,7 @@ app.use(express.json());
 
 
 
-app.post('/upload', upload.single('file'), async (req, res) => {
+/*app.post('/upload', upload.single('file'), async (req, res) => {
   if(!req.file){
     return res.status(400).send('No File Uplaoded')
   }
@@ -48,6 +48,7 @@ res.send('File upaloeded, stored, and data is Saved to Supabase');
   res.status(500).send('Error Proccesing File')
 }
 })
+*/
 
 
 app.use(express.static(path.join(__dirname, 'public'), {
