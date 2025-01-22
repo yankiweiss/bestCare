@@ -2,7 +2,7 @@ document.getElementById('userForm').addEventListener('submit', async function (e
     event.preventDefault(); // Prevent the form from refreshing the page
   
     const name = document.getElementById('name').value;
-    const email = document.getElementById('dateOfService').value;
+    const dateOfService = document.getElementById('dateOfService').value;
   
     try {
       const response = await fetch('https://best-care.vercel.app/newpatient', { // Replace with your backend URL
@@ -10,7 +10,7 @@ document.getElementById('userForm').addEventListener('submit', async function (e
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, date_of_service}), // Send name and email as JSON
+        body: JSON.stringify({ name, dateOfService}), // Send name and email as JSON
       });
   
       const data = await response.json();
