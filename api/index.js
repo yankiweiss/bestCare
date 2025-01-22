@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3501;
 const cors = require("cors");
 const supabase = require('../supabase.js');
 const { error } = require("console");
+const { enableCompileCache } = require("module");
 
 
 app.use(express.json());
@@ -12,16 +13,16 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.post('/newpatient', async(req, res) => {
-  const {name , date_of_service} = req.body 
+  const {name , email} = req.body 
 
-  if(!name || !date_of_service) {
-    return res.status(400).json({error: 'Name and Date of Service are required.'})
+  if(!name || !email) {
+    return res.status(400).json({error: 'Name and Email are required.'})
   }
 
   try {
     const {data , error} = await supabase
     .from('patients')
-    .insert([{name , date_of_service}])
+    .insert([{name , email}])
 
   if (error){
     throw error

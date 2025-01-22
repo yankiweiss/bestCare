@@ -10,7 +10,7 @@ document.getElementById('userForm').addEventListener('submit', async function (e
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, date_of_servicee}), // Send name and email as JSON
+        body: JSON.stringify({ name, email}), // Send name and email as JSON
       });
   
       const data = await response.json();
