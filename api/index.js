@@ -34,10 +34,9 @@ mongoose.connection.once('open', () => {
     
 })
 
-const serverless = require('serverless-http');
-const app = require('./index'); // Import your Express app
 
-module.exports = serverless(app);
+
+module.exports = app;
 
 
 
