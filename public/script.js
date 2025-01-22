@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     const tableHeader = document.createElement('thead');
     tableHeader.innerHTML = `
       <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Date Created</th>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Date Created</th>
       </tr>
     `;
     table.appendChild(tableHeader);
