@@ -10,7 +10,7 @@ const supabase = require('../supabase.js');
 const { error } = require("console");
 const { enableCompileCache } = require("module");
 
-
+app.use(cors());
 app.use(express.json());
 
 const storage = multer.diskStorage({
