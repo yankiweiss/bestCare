@@ -90,6 +90,7 @@ app.get('/users', async (req, res) => {
 
 
 app.post('/newpatient', async(req, res) => {
+  console.log(req.body)
   const {name , date_of_service} = req.body 
 
   if(!name || !date_of_service) {
