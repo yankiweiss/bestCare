@@ -64,36 +64,50 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
         });
     }
 
-        async function processCSVFile(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const data = event.target.result;
-                    const json = CSVToJSON(data);
-                    resolve(json);
-                };
-                reader.onerror = function(error) {
-                    reject(error);
-                };
-                reader.readAsText(file);
-            });
-        }
+       async function processCSVFile(file) {
+        return new Promise((resolve, reject) =>{
+            const reader = new FileReader();
+            const chunkSize = 1024 *1024;
+            let currentPosistion = 0;
+            let headers = null;
+            let jsonData = [];
 
-        function CSVToJSON(csv) {
-            const rows = csv.split('\n');
-            const headers = rows[0].split(',');
-        
-            const json = rows.slice(1).map(row => {
-                const values = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g); // Match values properly even with commas inside quotes
-                const obj = {};
-                headers.forEach((header, index) => {
-                    obj[header.trim()] = values[index].replace(/"/g, '').trim(); // Remove quotes and any extra spaces
+            reader.onload = function(event) {
+                const data = event.target.result;
+                const text = data.toString();
+                const lines = text.split('\n');
+
+                lines.forEach((line , index)=>{
+                    if(index === 0 && !headers){
+                        headers = line.split(',')
+                    }else {
+                        const values = line.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g); 
+                        if(values){
+                            const obj = {};
+                            headers.forEach((header, i )=> {
+                                obj[header.trim()] = values[i] ? values[i].replace(/"/g, '').trim() : '';
+                            });
+
+                            jsonData.push(obj)
+                        }
+                    }
                 });
-                return obj;
-            });
-        
-            return json;
-        }
-        
+
+                currentPosistion += chunkSize;
+                if(currentPosistion < file.size){
+                    readNextChunk()
+                }else {
+                    resolve(jsonData)
+                }
+
+                function readNextChunk(){
+                    const slice = file.slice(currentPosistion, currentPosistion + chunkSize);
+                    reader.readAsText(slice)
+                }
+
+                readNextChunk();
+            }
+        })
+       }
     })
     
