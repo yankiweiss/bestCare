@@ -12,6 +12,15 @@ const { enableCompileCache } = require("module");
 
 app.use(express.json());
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '././uploads');
+  },
+  filename : (req, file, cb) =>{
+    cb(null, Date.now() + path.extname(file.originalname))
+  }
+});
+
 const upload = multer({storage: storage})
 
 app.post('/upload', upload.single('file'), async (req, res) => {
@@ -90,7 +99,7 @@ app.post('/newpatient', async(req, res) => {
   try {
     const {data , error} = await supabase
     .from('patients')
-    .insert([{name , email}])
+    .insert([{name , date_of_service}])
 
   if (error){
     throw error
