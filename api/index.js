@@ -28,7 +28,7 @@ app.post('./upload', async (req, res) =>{
 
   try {
     const insertPromises = data.map(async (row) =>{
-      const {Name, DateOfService, Paid, BillingInsurance} = row;
+      const {'Date of Service': DateOfService, 'Billing Insurance': BillingInsurance, Name, Paid } = row;
 
       if(Name && DateOfService && Paid && BillingInsurance){
         const {error } = await supabase
