@@ -102,29 +102,35 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
             return json;
         }*/
 
-            function CSVToJSON(csv) {
-                const rows = csv.split('\n').filter(row => row.trim() !== ''); // Remove empty rows
-            
-                const headers = rows[0].split(','); // Get headers from the first row
-                
-                const json = rows.slice(1).map(row => {
-                    const values = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g); // Match values properly even with commas inside quotes
-                    const obj = {};
-            
-                    headers.forEach((header, index) => {
-                        // Check if a value exists for this header
-                        const value = values ? values[index] : '';
-                        obj[header.trim()] = value.replace(/"/g, '').trim(); // Remove quotes and any extra spaces
-                    });
-            
-                    return obj;
+            function CSVToJSON(csv){
+                const rows = csv.split(/\r?\n/).filter(row => row.trim() !== '');
+
+                const headers = rows.shift().split(',').map(header => header.trim())
+
+                const json = [];
+                let currentRow = []
+
+                rows.forEach(row => {
+                    if(row.split('"').length % 2 === 0){
+                        currentRow[currentRow.length - 1] += '\n' + row;
+                    }else {
+                        currentRow.push(row)
+                    }
+                    
                 });
-            
+
+                currentRow.forEach(row => {
+                    const values = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g);
+                    if(values){
+                        const obj = {};
+                        headers.forEach((header, index) => {
+                            obj[header] = values[index] ? values[index].replace(/"/g, '').trim() : '';
+                        })
+
+                        json.push(obj)
+                    }
+                })
+
                 return json;
             }
-            
-
-
-        
-    })
-    
+        });
