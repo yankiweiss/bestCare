@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         <th scope="col">Name:</th>
         <th scope="col">Date Of Service:</th>
         <th scope="col">Paid:</th>
+        <th scope="col">Billing Insurance:</th>
       </tr>`;
     table.appendChild(tableHeader);
 
@@ -52,12 +53,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         const nameCell = document.createElement('td');
         const dateCell = document.createElement('td');
         const paidCell = document.createElement('td');
+        const billing_insuranceCell = document.createElement('td');
 
         // Add values to the td elements
         idCell.innerHTML = user.id;
         nameCell.innerHTML = user.name;
         dateCell.innerHTML = user.date_of_service;
         paidCell.innerHTML = user.paid;
+        billing_insuranceCell.innerHTML = user.billing_insurance;
 
         // If there are duplicates, apply the text-danger class
         if (count > 1) {
@@ -65,6 +68,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           nameCell.classList.add('text-danger');
           dateCell.classList.add('text-danger');
           paidCell.classList.add('text-danger');
+          billing_insuranceCell.classList.add('text-danger');
         }
 
         // Append td elements to the row
@@ -72,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         row.appendChild(nameCell);
         row.appendChild(dateCell);
         row.appendChild(paidCell);
+        row.appendChild(billing_insuranceCell);
 
         // Append the row to the table body
         tableBody.appendChild(row);
