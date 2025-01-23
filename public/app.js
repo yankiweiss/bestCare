@@ -71,20 +71,27 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
         });
     }
 
-        async function processCSVFile(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const data = event.target.result;
-                    const json = CSVToJSON(data);
-                    resolve(json);
-                };
-                reader.onerror = function(error) {
-                    reject(error);
-                };
-                reader.readAsText(file);
+    async function processCSVFile(file) {
+        return new Promise((resolve, reject) => {
+            const jsonData = [];
+            Papa.parse(file, {
+                header: true, // Use the first row as headers
+                skipEmptyLines: true,
+                chunk: function (results) {
+                    console.log('Processed chunk:', results.data);
+                    jsonData.push(...results.data); // Append chunk data to jsonData
+                },
+                complete: function () {
+                    console.log('All chunks processed!');
+                    resolve(jsonData); // Resolve with the complete data
+                },
+                error: function (error) {
+                    reject(error); // Reject if there's an error
+                }
             });
-        }
+        });
+    }
+});
 
         /*function CSVToJSON(csv) {
             const rows = csv.split('\n');
