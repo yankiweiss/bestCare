@@ -18,67 +18,37 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './uploads/')
-  },
 
-  filename : (req, file , cb) => {
-    cb(null, file.originalname)
+
+app.post('/upload', async(req, res)=> {
+  const data = req.body;
+
+  if(!data || data.length === 0){
+    return res.status(400).send('No data received.');
   }
-});
-
-const upload = multer({storage: storage})
-
-app.post('/upload', upload.single('csvFile'), (req, res) =>{
-
-  console.log(req.file);
-  if(!req.file){
-    return res.status(400).send('No file uploaded')
-  }
-
-  const filePath = path.join(__dirname, 'uploads', req.file.filename );
-  const jsonData = []
-
-  fs.createReadStream(filePath)
-  pipeline(csv())
-  .on('data', (row) => {
-    jsonData.push(row)
-  })
-  .on('end', ()=> {
-    saveToDatabase(jsonData)
-    .then(() =>{
-      res.status(200).send('File uploaded and data saved to database.');
-    })
-    .catch((err) => {
-      res.status(500).send('Error saving to database.');
-  });
-  })
-})
-
-async function saveToDatabase(data) {
-  console.log('Data to save:', data);
-
-  const records = data.map((row)=> ({
-    name: row.name,
-    date_of_service: row.date_of_service
-  }))
 
   try {
-    const { error } = await supabase
-    .from('patients')
-    .insert(records)
+    const insertPromises = data.map(async (row) =>{
+      const {name , date_of_service} = row;
+      if(name && date_of_service) {
+        const {error } = await supabase
+        .from('patients')
+        .insert([{name , date_of_service}]);
 
-    if(error){
-      throw error
-    }
+        if (error){
+          console.error('Error inserting data:' ,error)
+        }
+      }
+    });
 
-    console.log('Data saved to databse')
+    await Promise.all(insertPromises);
+
+    res.send('File processed and data saved to the database.')
   } catch (error) {
-    console.error('Error saving in database', error)
-    throw error
+    console.error('Error processing data:', error);
+        res.status(500).send('Error processing data.');
   }
-}
+})
    
 
 app.use(express.static(path.join(__dirname, 'public'), {
