@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
 
-app.post('/upload', async (req, res) =>{
+/*app.post('/upload', async (req, res) =>{
   const data = req.body;
   console.log(data)
 
@@ -58,7 +58,58 @@ res.send('File processed and data saved to the database.');
   console.error('Error processing data:', error);
   res.status(500).send('Error processing data.');
 }
+});*/
+
+const BATCH_SIZE = 100; // Adjust this based on your database's performance
+
+app.post('/upload', async (req, res) => {
+    const data = req.body;
+
+    if (!data || data.length === 0) {
+        return res.status(400).send('No Data Received!');
+    }
+
+    try {
+        console.log(`Received ${data.length} rows. Processing in batches of ${BATCH_SIZE}.`);
+
+        // Process in batches
+        for (let i = 0; i < data.length; i += BATCH_SIZE) {
+            const batch = data.slice(i, i + BATCH_SIZE);
+
+            const insertPromises = batch.map(async (row) => {
+                const { 'Date of Service': DateOfService, 'Billing Insurance': BillingInsurance, Name, Paid } = row;
+
+                if (Name && DateOfService && Paid && BillingInsurance) {
+                    const { error } = await supabase
+                        .from('patients')
+                        .insert([{
+                            name: Name,
+                            date_of_service: DateOfService,
+                            paid: Paid,
+                            billing_insurance: BillingInsurance,
+                        }]);
+
+                    if (error) {
+                        console.error('Error inserting in Database:', error, row);
+                    }
+                } else {
+                    console.warn('Row skipped due to missing fields:', row);
+                }
+            });
+
+            // Wait for the current batch to complete before proceeding
+            await Promise.all(insertPromises);
+
+            console.log(`Batch ${i / BATCH_SIZE + 1} processed.`);
+        }
+
+        res.send('File processed and data saved to the database.');
+    } catch (error) {
+        console.error('Error processing data:', error);
+        res.status(500).send('Error processing data.');
+    }
 });
+
 
 
 app.use(express.static(path.join(__dirname, 'public'), {
