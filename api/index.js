@@ -36,7 +36,7 @@ app.post('/upload', async (req, res) =>{
         .from('patients')
         .insert([{
            name: Name,
-           date_of_service: dateOfService,
+           date_of_service: DateOfService,
            paid: Paid,
            billing_insurance: BillingInsurance
         }])

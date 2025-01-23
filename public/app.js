@@ -34,12 +34,19 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(jsonData),
+        
        });
+
+       
 
        if (response.ok){
         alert('File uploaded and processed successfully!');
        }else {
         alert('Error uploading file.');
+        const errorDetails = await response.text();
+            console.error('Error:', errorDetails);
+            alert(`Error uploading file: ${errorDetails}`);
+       
        }
     } catch (error) {
         alert('Error proccesing file.');
