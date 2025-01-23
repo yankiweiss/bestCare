@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       throw new Error(users.error || 'Failed to fetch users');
     }
 
+    console.log("Yankee weiss")
+
     const table = document.getElementById('userTable');
     const tableBody = document.getElementById("userTableBody");
 
