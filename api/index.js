@@ -19,8 +19,9 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
 
-app.post('./upload', async (req, res) =>{
+app.post('/upload', async (req, res) =>{
   const data = req.body;
+  console.log(data)
 
   if(!data || data.length === 0){
     return res.status(400).send('No Data Received!')
