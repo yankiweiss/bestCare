@@ -15,12 +15,12 @@ const bodyParser = require('body-parser');
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
-
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads')
+    cb(null, './uploads/')
   },
 
   filename : (req, file , cb) => {
@@ -31,6 +31,8 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 app.post('/upload', upload.single('csvFile'), (req, res) =>{
+
+  console.log(req.file);
   if(!req.file){
     return res.status(400).send('No file uploaded')
   }
