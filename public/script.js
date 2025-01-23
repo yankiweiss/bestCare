@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async function(){
 
       const row = document.createElement('tr');
       if(isDuplicate){
-        row.style.backgroundColor = 'red';
+        row.classList.add('text-danger');
       }
 
       row.innerHTML =`
