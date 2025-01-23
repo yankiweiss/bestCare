@@ -140,4 +140,4 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
 
                 return json;
             }
-        });
+    
