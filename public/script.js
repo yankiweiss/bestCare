@@ -48,6 +48,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     groupedUsers.forEach(groupData => {
       const { group, count } = groupData;
 
+      console.log('Yankee Weiss')
+
       group.forEach(user => {
         const row = document.createElement('tr');
 
