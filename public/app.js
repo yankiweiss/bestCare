@@ -26,50 +26,34 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
             return;
        }
 
-       console.log(jsonData)
+       console.log(`Total records processed: ${jsonData.length}`);
 
-       const response = await fetch('https://best-care.vercel.app/upload', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(jsonData),
-        
-       });
+       // Split data into chunks and upload
+       const CHUNK_SIZE = 500; // Number of rows per chunk
+       for (let i = 0; i < jsonData.length; i += CHUNK_SIZE) {
+           const chunk = jsonData.slice(i, i + CHUNK_SIZE); // Create chunks of data
+           console.log(`Uploading chunk ${Math.floor(i / CHUNK_SIZE) + 1}...`);
 
-       
+           const response = await fetch('https://best-care.vercel.app/upload', {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json',
+               },
+               body: JSON.stringify(chunk),
+           });
 
-       if (response.ok){
-        alert('File uploaded and processed successfully!');
-       }else {
-        alert('Error uploading file.');
-        const errorDetails = await response.text();
-            console.error('Error:', errorDetails);
-            alert(`Error uploading file: ${errorDetails}`);
-       
+           if (!response.ok) {
+               throw new Error(`Error uploading chunk ${Math.floor(i / CHUNK_SIZE) + 1}`);
+           }
+
+           console.log(`Chunk ${Math.floor(i / CHUNK_SIZE) + 1} uploaded successfully.`);
        }
-    } catch (error) {
-        alert('Error proccesing file.');
-        console.error(error)
-    }
 
-    async function processExcelFile(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const data = event.target.result;
-                const workbook = XLSX.read(data, { type: 'binary' });
-                const sheetName = workbook.SheetNames[0];  // Get the first sheet
-                const sheet = workbook.Sheets[sheetName];
-                const json = XLSX.utils.sheet_to_json(sheet);
-                resolve(json);
-            };
-            reader.onerror = function(error) {
-                reject(error);
-            };
-            reader.readAsBinaryString(file);
-        });
-    }
+       alert('File uploaded and processed successfully!');
+   } catch (error) {
+       alert('Error processing or uploading file.');
+       console.error(error);
+   }
 
     async function processCSVFile(file) {
         return new Promise((resolve, reject) => {
