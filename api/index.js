@@ -19,37 +19,46 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
 
-
-app.post('/upload', async(req, res)=> {
+app.post('./upload', async (req, res) =>{
   const data = req.body;
 
   if(!data || data.length === 0){
-    return res.status(400).send('No data received.');
+    return res.status(400).send('No Data Received!')
   }
 
   try {
     const insertPromises = data.map(async (row) =>{
-      const {name , date_of_service} = row;
-      if(name && date_of_service) {
+      const {Name, DateOfService, Paid, BillingInsurance} = row;
+
+      if(Name && DateOfService && Paid && BillingInsurance){
         const {error } = await supabase
         .from('patients')
-        .insert([{name , date_of_service}]);
+        .insert([{
+           name: Name,
+           date_of_service: dateOfService,
+           paid: Paid,
+           billing_insurance: BillingInsurance
+        }])
 
-        if (error){
-          console.error('Error inserting data:' ,error)
+        if(error){
+          console.error("Error inserting in Database")
         }
+
+
+      }else {
+        console.warn('Row Skipped sue to missing feilds', row)
       }
-    });
+    })
 
-    await Promise.all(insertPromises);
+await Promise.all(insertPromises)
 
-    res.send('File processed and data saved to the database.')
-  } catch (error) {
-    console.error('Error processing data:', error);
-        res.status(500).send('Error processing data.');
-  }
-})
-   
+res.send('File processed and data saved to the database.');
+} catch (error) {
+  console.error('Error processing data:', error);
+  res.status(500).send('Error processing data.');
+}
+});
+
 
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders: (res, filePath) => {

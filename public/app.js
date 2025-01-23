@@ -19,7 +19,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
     try {
        if(file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
         jsonData = await processExcelFile(file)
-       }else if (file.name.endsWith('csv')){
+       }else if (file.name.endsWith('.csv')){
         jsonData = await processCSVFile(file)
        }else {
         alert('Invalid file type. Please upload an Excel or CSV file.');
@@ -79,7 +79,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
             });
         }
 
-        function CSVToJSON(csv) {
+        /*function CSVToJSON(csv) {
             const rows = csv.split('\n');
             const headers = rows[0].split(',');
         
@@ -93,7 +93,31 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) =>{
             });
         
             return json;
-        }
+        }*/
+
+            function CSVToJSON(csv) {
+                const rows = csv.split('\n').filter(row => row.trim() !== ''); // Remove empty rows
+            
+                const headers = rows[0].split(','); // Get headers from the first row
+                
+                const json = rows.slice(1).map(row => {
+                    const values = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g); // Match values properly even with commas inside quotes
+                    const obj = {};
+            
+                    headers.forEach((header, index) => {
+                        // Check if a value exists for this header
+                        const value = values ? values[index] : '';
+                        obj[header.trim()] = value.replace(/"/g, '').trim(); // Remove quotes and any extra spaces
+                    });
+            
+                    return obj;
+                });
+            
+                return json;
+            }
+            
+
+
         
     })
     
